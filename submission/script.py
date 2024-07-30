@@ -3,7 +3,7 @@ This script is used to train the model for the project.
 
 You should import your main functions from the data_curation.py script and use them to prepare the dataset for training.
 
-The approved model is `yolov8m-coco-torch` from the FiftyOne Model Zoo.
+The approved model is `yolov8m` from Ulytralytics. 
 
 Your predictions must be in a label_field called "predictions" in the dataset.
 
@@ -12,18 +12,23 @@ You may pass your final selection of hyperparameters as keyword arguments in the
 See here for more details about hyperparameters for this model: https://docs.ultralytics.com/modes/train/#train-settings
 
 """
+from datetime import datetime
+from math import log
+
+import fiftyone as fo
+import fiftyone.utils.random as four
+import fiftyone.utils.huggingface as fouh
+
+from ultralytics import YOLO
 
 from data_curation import prepare_dataset
 
-import fiftyone as fo
-import fiftyone.zoo as foz
-
 def export_to_yolo_format(
     samples,
-    export_dir,
     classes,
     label_field="ground_truth",
-    splits=None
+    export_dir="./yolo_formatted",
+    splits=["train", "val"]
 ):
     """
     Export samples to YOLO format, optionally handling multiple data splits.
@@ -67,37 +72,103 @@ def export_to_yolo_format(
             split=split
         )
 
-# function to train model using yolo command line arguments
+def train_model(dataset):
+    """
+    Train the YOLO model on the given dataset.
 
-# function to apply model to dataset - should be able to do this with apply_model method
+    Args:
+        dataset (fiftyone.core.dataset.Dataset): The dataset to train on.
+
+    Returns:
+        YOLO: The best trained model.
+    """
+    #split train set into train and validation, you can adjust these parameters
+    four.random_split(dataset,{"train": 0.90, "val": 0.10})
+
+    # Do not change the arguments here
+    export_to_yolo_format(
+        samples=dataset,
+        classes=dataset.default_classes,
+        )
+    
+    model = YOLO(model="yolov8m.pt")
+
+    results = model.train(
+        data="./yolo_formatted/dataset.yaml", #do not change this argument
+        # you can pass your hyperparameters here, for example
+        epochs=1,
+        batch_size=8,
+        imgzs=1280,
+        # device="cuda",
+        #so on and so forth
+    )
+    
+    best_model_path = str(results.save_dir / "weights/best.pt") #do not change this argument
+
+    best_model = YOLO(best_model_path)
+
+    return best_model
+
+
+def run_inference_on_eval_set(dataset, best_model):
+    """
+    Run inference on the evaluation set using the best trained model.
+
+    Args:
+        dataset (fiftyone.core.dataset.Dataset): The evaluation dataset.
+        best_model (YOLO): The best trained YOLO model.
+
+    Returns:
+        None
+    """
+    dataset.apply_model(best_model, label_field="predictions")
+
+def eval_model(eval_dataset):
+    """
+    Evaluate the model on the evaluation dataset.
+
+    Args:
+        eval_dataset (fiftyone.core.dataset.Dataset): The evaluation dataset.
+
+    Returns:
+        None
+    """
+    current_datetime = datetime.now()
+
+    detection_results = eval_dataset.evaluate_detections(
+        gt_field="ground_truth",  
+        eval_key=f"evalrun_{current_datetime}",
+        compute_mAP=True,
+        )
+
+    detection_results.mAP()
 
 
 
 
 def run():
+    """
+    Main function to run the entire training and evaluation process.
 
-    dataset = prepare_dataset(name="Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set")
+    Returns:
+        None
+    """
+    #train set
+    curated_train_dataset = prepare_dataset(name="Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set")
+
+    #public eval set
+    public_eval_dataset = fouh.load_from_hub("Voxel51/DCVAI-Challenge-Public-Eval-Set")
+
+    N = len(curated_train_dataset)
     
-    export_to_yolo_format(
-        samples=dataset,
-        export_dir='yolo_data',
-        classes=dataset.default_classes,
-        splits=["train", "val"]
-        )
+    best_trained_model = train_model(curated_train_dataset)
 
-    # Load the approved pre-trained model from the zoo
-    model = foz.load_zoo_model(
-        name="yolov8m-coco-torch",
-        install_requirements=True,
-        #example for how to pass hyperparameters
-        lr0=0.01,
-        momentum=0.937,
-        weight_decay=0.0005,
-        box=7.5
-    )
+    mAP_on_public_eval_set = run_inference_on_eval_set(dataset=public_eval_dataset, best_model=best_trained_model)
 
-    #apply_model to dataset
-    dataset.apply_model(model, label_field="predictions")
+    
+
+    adjusted_mAP = (mAP_on_public_eval_set * log(N))/N
+
 
 
 if __name__=="__main__":

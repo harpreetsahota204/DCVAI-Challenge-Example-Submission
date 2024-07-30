@@ -21,7 +21,7 @@ def take_random_sample(dataset):
     """Take a sample from the dataset"""
     return dataset.take(size=10,seed=51)
 
-def prepare_dataset(name):
+def prepare_dataset(name = "Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set"):
     """Prepare the dataset for model training"""
     # Load the approved dataset from the hub
     # dataset = fouh.load_from_hub(name = "Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set", split="train")
