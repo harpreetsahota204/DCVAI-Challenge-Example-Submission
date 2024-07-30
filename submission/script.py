@@ -144,8 +144,6 @@ def eval_model(eval_dataset):
     detection_results.mAP()
 
 
-
-
 def run():
     """
     Main function to run the entire training and evaluation process.
@@ -164,8 +162,6 @@ def run():
     best_trained_model = train_model(curated_train_dataset)
 
     mAP_on_public_eval_set = run_inference_on_eval_set(dataset=public_eval_dataset, best_model=best_trained_model)
-
-    
 
     adjusted_mAP = (mAP_on_public_eval_set * log(N))/N
 
