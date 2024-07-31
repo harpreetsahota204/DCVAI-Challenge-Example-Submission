@@ -31,7 +31,7 @@ For details about the competition and submission requirements, read the [`Submis
    - The submission script will automatically use these parameters during training.
 
    - Important: The number of epochs is limited to a maximum of 50. If you set a higher value, the script will raise a ValueError.
-   
+
    - Other key hyperparameters you may want to adjust include learning rate, batch size, and image size. Refer to the Ultralytics documentation for a full list of available parameters.
 
 Remember, the focus of this challenge is on data-centric AI. Your efforts should be concentrated on improving the dataset quality and implementing effective data curation strategies in `data_curation.py`, rather than modifying the model architecture or training procedure.
@@ -59,7 +59,7 @@ Remember, the focus of this challenge is on data-centric AI. Your efforts should
    pip install -r requirements.txt
    ```
 
-3. Ensure you have access to the datasets:
+3. Ensure you have access to the datasets as they are gated and you must request access:
    - Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set
    - Voxel51/DCVAI-Challenge-Public-Eval-Set
 
