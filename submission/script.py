@@ -65,15 +65,15 @@ def export_to_yolo_format(
             split=split
         )
 
-def train_model(dataset, training_config):
+def train_model(training_dataset, training_config):
     """
     Train the YOLO model on the given dataset using the provided configuration.
     """
-    four.random_split(dataset, {"train": training_config['train_split'], "val": training_config['val_split']})
+    four.random_split(training_dataset, {"train": training_config['train_split'], "val": training_config['val_split']})
 
     export_to_yolo_format(
-        samples=dataset,
-        classes=dataset.default_classes,
+        samples=training_dataset,
+        classes=training_dataset.default_classes,
     )
 
     model = YOLO(model="yolov8m.pt")
