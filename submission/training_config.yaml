@@ -4,7 +4,7 @@ val_split: 0.1
 
 # Training parameters
 train_params:
-  epochs: 100
+  epochs: 50
   batch: 16
   imgsz: 640
   lr0: 0.01
