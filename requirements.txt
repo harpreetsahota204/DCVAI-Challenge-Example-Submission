@@ -1,2 +1,4 @@
 fiftyone==0.24.1
 ultralytics==8.2.64
+huggingface-hub
+hf-transfer

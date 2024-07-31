@@ -12,6 +12,7 @@ You may pass your final selection of hyperparameters as keyword arguments in the
 See here for more details about hyperparameters for this model: https://docs.ultralytics.com/modes/train/#train-settings
 
 """
+import os
 from datetime import datetime
 from math import log
 import yaml
@@ -135,7 +136,10 @@ def run():
     Returns:
         None
     """
-    with open('training_config.yaml', 'r') as file:
+    os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "1"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(script_dir, 'training_config.yaml')
+    with open(config_path, 'r') as file:
         training_config = yaml.safe_load(file)
 
     #train set

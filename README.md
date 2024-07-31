@@ -59,6 +59,13 @@ Remember, the focus of this challenge is on data-centric AI. Your efforts should
    pip install -r requirements.txt
    ```
 
+You may need to install the following libraries:
+
+```
+sudo apt-get update
+sudo apt-get install -y libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6
+```
+
 3. Ensure you have access to the datasets as they are gated and you must request access:
    - Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set
    - Voxel51/DCVAI-Challenge-Public-Eval-Set
