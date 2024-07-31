@@ -119,7 +119,7 @@ def eval_model(dataset_to_evaluate):
     Returns:
         the mean average precision (mAP) of the model on the evaluation dataset.
     """
-    current_datetime = datetime.now()
+    current_datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     detection_results = dataset_to_evaluate.evaluate_detections(
         gt_field="ground_truth",  
