@@ -123,6 +123,7 @@ def eval_model(dataset_to_evaluate):
 
     detection_results = dataset_to_evaluate.evaluate_detections(
         gt_field="ground_truth",  
+        pred_field="predictions",
         eval_key=f"evalrun_{current_datetime}",
         compute_mAP=True,
         )
