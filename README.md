@@ -1,5 +1,7 @@
 # DCVAI-Challenge-Example-Submission
 
+![visitors](https://visitor-badge.laobi.icu/badge?page_id=harpreetsahota204.DCVAI-Challenge-Example-Submission)
+
 This project contains the code for training and evaluating a YOLOv8 model for the Voxel51 [Data-Centric Visual AI Challenge](https://huggingface.co/spaces/Voxel51/DataCentricVisualAIChallenge). 
 
 For details about the competition and submission requirements, read the [`Submission information`](https://huggingface.co/spaces/Voxel51/DataCentricVisualAIChallenge) tab on the competition space.
