@@ -14,6 +14,7 @@ See here for more details about hyperparameters for this model: https://docs.ult
 """
 from datetime import datetime
 from math import log
+import yaml
 
 import fiftyone as fo
 import fiftyone.utils.random as four
@@ -72,39 +73,25 @@ def export_to_yolo_format(
             split=split
         )
 
-def train_model(dataset):
+def train_model(dataset, training_config):
     """
-    Train the YOLO model on the given dataset.
-
-    Args:
-        dataset (fiftyone.core.dataset.Dataset): The dataset to train on.
-
-    Returns:
-        YOLO: The best trained model.
+    Train the YOLO model on the given dataset using the provided configuration.
     """
-    #split train set into train and validation, you can adjust these parameters
-    four.random_split(dataset,{"train": 0.90, "val": 0.10})
+    four.random_split(dataset, {"train": training_config['train_split'], "val": training_config['val_split']})
 
-    # Do not change the arguments here
     export_to_yolo_format(
         samples=dataset,
         classes=dataset.default_classes,
-        )
-    
+    )
+
     model = YOLO(model="yolov8m.pt")
 
     results = model.train(
-        data="./yolo_formatted/dataset.yaml", #do not change this argument
-        # you can pass your hyperparameters here, for example
-        epochs=1,
-        batch_size=8,
-        imgzs=1280,
-        # device="cuda",
-        #so on and so forth
+        data="./yolo_formatted/dataset.yaml",
+        **training_config['train_params']
     )
     
-    best_model_path = str(results.save_dir / "weights/best.pt") #do not change this argument
-
+    best_model_path = str(results.save_dir / "weights/best.pt")
     best_model = YOLO(best_model_path)
 
     return best_model
@@ -151,6 +138,9 @@ def run():
     Returns:
         None
     """
+    with open('model_config.yaml', 'r') as file:
+        model_config = yaml.safe_load(file)
+
     #train set
     curated_train_dataset = prepare_dataset(name="Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set")
 

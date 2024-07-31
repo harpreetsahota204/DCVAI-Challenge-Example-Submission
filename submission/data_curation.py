@@ -22,15 +22,40 @@ def take_random_sample(dataset):
     return dataset.take(size=10,seed=51)
 
 def prepare_dataset(name):
-    """Prepare the dataset for model training"""
-    # Load the approved dataset from the hub
-    # dataset = fouh.load_from_hub(name, split="train") # uncomment this line to load the dataset from the hub
-    dataset = fo.load_dataset("Data-Centric-Visual-AI-Train-Set") #since i already have it locally, your code should only use the line above
+    """
+    Prepare the dataset for model training.
     
-    # implement your data curation functions here
+    Args:
+        name (str): The name of the dataset to load. Must be "Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set".
+    
+    Returns:
+        fiftyone.core.dataset.Dataset: The curated dataset.
+    
+    Raises:
+        ValueError: If the provided dataset name is not the approved one.
+    
+    Note:
+        The following code block MUST NOT be removed from your submission:
+        
+        APPROVED_DATASET = "Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set"
+        
+        if name != APPROVED_DATASET:
+            raise ValueError(f"Only the approved dataset '{APPROVED_DATASET}' is allowed for this competition.")
+        
+        This ensures that only the approved dataset is used for the competition.
+    """
+    APPROVED_DATASET = "Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set"
+    
+    if name != APPROVED_DATASET:
+        raise ValueError(f"Only the approved dataset '{APPROVED_DATASET}' is allowed for this competition.")
+    
+    # Load the approved dataset from the hub
+    dataset = fouh.load_from_hub(name, split="train")
+    
+    # Implement your data curation functions here
     dataset = shuffle_data(dataset)
     dataset = take_random_sample(dataset)
     
-    # return the curated dataset
+    # Return the curated dataset
     curated_dataset = dataset.clone() 
     return curated_dataset
