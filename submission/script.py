@@ -138,8 +138,8 @@ def run():
     Returns:
         None
     """
-    with open('model_config.yaml', 'r') as file:
-        model_config = yaml.safe_load(file)
+    with open('training_config.yaml', 'r') as file:
+        training_config = yaml.safe_load(file)
 
     #train set
     curated_train_dataset = prepare_dataset(name="Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set")
@@ -149,8 +149,8 @@ def run():
 
     N = len(curated_train_dataset)
     
-    best_trained_model = train_model(curated_train_dataset)
-
+    best_trained_model = train_model(dataset=curated_train_dataset, training_config=training_config)
+    
     mAP_on_public_eval_set = run_inference_on_eval_set(dataset=public_eval_dataset, best_model=best_trained_model)
 
     adjusted_mAP = (mAP_on_public_eval_set * log(N))/N
