@@ -6,6 +6,10 @@ This project contains the code for training and evaluating a YOLOv8 model for th
 
 For details about the competition and submission requirements, read the [`Submission information`](https://huggingface.co/spaces/Voxel51/DataCentricVisualAIChallenge) tab on the competition space.
 
+Training dataset can be found [here](https://huggingface.co/datasets/Voxel51/Data-Centric-Visual-AI-Challenge-Train-Set).
+
+Public evaluation set can be found [here](https://huggingface.co/datasets/Voxel51/DCVAI-Challenge-Public-Eval-Set).
+
 ## Important Notes for Participants
 
 1. **Implementing `data_curation.py`**: 
