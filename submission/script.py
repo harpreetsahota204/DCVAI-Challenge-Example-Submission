@@ -154,6 +154,10 @@ def run():
 
     adjusted_mAP = (mAP_on_public_eval_set * log(N))/N
 
+    # need to add logic to log the score to the leaderboard for now, just print
+
+    print(f"The adjusted mean Average Precision (mAP) on the public evaluation set is: {adjusted_mAP:.4f}")
+
 
 if __name__=="__main__":
     run()
