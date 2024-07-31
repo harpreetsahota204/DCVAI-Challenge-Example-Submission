@@ -76,7 +76,7 @@ def train_model(training_dataset, training_config):
         classes=training_dataset.default_classes,
     )
 
-    model = YOLO(model="yolov8m.pt")
+    model = YOLO("yolov8m.pt")
 
     # Check if epochs in train_params exceeds 50
     if 'epochs' in training_config['train_params'] and training_config['train_params']['epochs'] > 50:
