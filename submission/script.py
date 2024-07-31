@@ -34,10 +34,6 @@ def export_to_yolo_format(
     """
     Export samples to YOLO format, optionally handling multiple data splits.
 
-    This function exports the given samples to the YOLO format, which is commonly
-    used for object detection tasks. It can handle single or multiple data splits
-    (e.g., train, validation, test).
-
     Args:
         samples (fiftyone.core.collections.SampleCollection): The dataset or samples to export.
         export_dir (str): The directory where the exported data will be saved.
@@ -51,11 +47,6 @@ def export_to_yolo_format(
     Returns:
         None
 
-    Example:
-        >>> import fiftyone as fo
-        >>> dataset = fo.Dataset("my_dataset")
-        >>> classes = dataset.default_classes
-        >>> export_yolo_data(dataset, "/path/to/export", classes, splits=["train", "val", "test"])
     """
     if splits is None:
         splits = ["val"]
@@ -73,16 +64,14 @@ def export_to_yolo_format(
             split=split
         )
 
-def train_model(dataset, training_config):
+def train_model(training_dataset, training_config):
     """
     Train the YOLO model on the given dataset using the provided configuration.
     """
-    four.random_split(dataset, {"train": training_config['train_split'], "val": training_config['val_split']})
 
-    export_to_yolo_format(
-        samples=dataset,
-        classes=dataset.default_classes,
-    )
+    four.random_split(training_dataset, {"train": training_config['train_split'], "val": training_config['val_split']})
+
+    export_to_yolo_format(samples=training_dataset,classes=training_dataset.default_classes)
 
     model = YOLO(model="yolov8m.pt")
 
@@ -97,39 +86,41 @@ def train_model(dataset, training_config):
     return best_model
 
 
-def run_inference_on_eval_set(dataset, best_model):
+def run_inference_on_eval_set(eval_dataset, best_model):
     """
     Run inference on the evaluation set using the best trained model.
 
     Args:
-        dataset (fiftyone.core.dataset.Dataset): The evaluation dataset.
+        eval_dataset (fiftyone.core.dataset.Dataset): The evaluation dataset.
         best_model (YOLO): The best trained YOLO model.
 
     Returns:
-        None
+        The dataset eval_dataset with predictions
     """
-    dataset.apply_model(best_model, label_field="predictions")
+    eval_dataset.apply_model(best_model, label_field="predictions")
+    eval_dataset.save()
+    return eval_dataset
 
-def eval_model(eval_dataset):
+
+def eval_model(dataset_to_evaluate):
     """
     Evaluate the model on the evaluation dataset.
 
     Args:
-        eval_dataset (fiftyone.core.dataset.Dataset): The evaluation dataset.
+        dataset_to_evaluate (fiftyone.core.dataset.Dataset): The evaluation dataset.
 
     Returns:
-        None
+        the mean average precision (mAP) of the model on the evaluation dataset.
     """
     current_datetime = datetime.now()
 
-    detection_results = eval_dataset.evaluate_detections(
+    detection_results = dataset_to_evaluate.evaluate_detections(
         gt_field="ground_truth",  
         eval_key=f"evalrun_{current_datetime}",
         compute_mAP=True,
         )
 
-    detection_results.mAP()
-
+    return detection_results.mAP()
 
 def run():
     """
@@ -149,12 +140,13 @@ def run():
 
     N = len(curated_train_dataset)
     
-    best_trained_model = train_model(dataset=curated_train_dataset, training_config=training_config)
+    best_trained_model = train_model(training_dataset=curated_train_dataset, training_config=training_config)
     
-    mAP_on_public_eval_set = run_inference_on_eval_set(dataset=public_eval_dataset, best_model=best_trained_model)
+    model_predictions = run_inference_on_eval_set(eval_dataset=public_eval_dataset, best_model=best_trained_model)
+    
+    mAP_on_public_eval_set = eval_model(dataset_to_evaluate=model_predictions)
 
     adjusted_mAP = (mAP_on_public_eval_set * log(N))/N
-
 
 
 if __name__=="__main__":
