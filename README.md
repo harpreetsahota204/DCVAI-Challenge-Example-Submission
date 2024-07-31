@@ -16,7 +16,7 @@ For details about the competition and submission requirements, read the [`Submis
 
 2. **Do Not Modify Dataset Loading**:
 
-   - Do not change the dataset that is being loaded in the submission script.
+   - Do not change the dataset loaded in the submission script.
 
    - A ValueError has been implemented to prevent loading different datasets.
 
@@ -100,8 +100,6 @@ The `training_config.yaml` file contains the following key parameters:
 Modify these parameters to experiment with different training configurations.
 
 ## Notes
-
-- The `data_curation.py` script is not included in this repository. Ensure you have implemented the necessary data preparation functions.
 
 - The model used is YOLOv8m from Ultralytics.
 
