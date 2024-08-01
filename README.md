@@ -112,6 +112,19 @@ The `training_config.yaml` file contains the following key parameters:
 
 Modify these parameters to experiment with different training configurations.
 
+## Important dates
+
+- August 1, 2024: Competition launches. Dataset and rules released. Registration opens.
+- August 21, 2024: Getting Started with FiftyOne Workshop. [Sign up here](https://voxel51.com/computer-vision-events/getting-started-with-fiftyone-workshop-aug-21-2024/)
+- September 1, 2024: Submissions begin to be accepted
+- September 6, 2024: Competition check-in and office hour session. [Sign up here](https://us02web.zoom.us/meeting/register/tZAsd-ugqzMoGtTMpM0ALpuq32JOOV6XAmOp#/registration)
+- September 13, 2024: Competition check-in and office hour session. [Sign up here](https://us02web.zoom.us/meeting/register/tZAsd-ugqzMoGtTMpM0ALpuq32JOOV6XAmOp#/registration)
+- September 20, 2024: Competition check-in and office hour session. [Sign up here](https://us02web.zoom.us/meeting/register/tZAsd-ugqzMoGtTMpM0ALpuq32JOOV6XAmOp#/registration)
+- September 25, 2024: Getting Started with FiftyOne Workshop. [Sign up here](https://us02web.zoom.us/meeting/register/tZAsd-ugqzMoGtTMpM0ALpuq32JOOV6XAmOp#/registration)
+- October 27, 2024: (11:59 PM UTC): Final submission deadline
+- November 6, 2024: Results announced, winners declared
+
+
 ## Notes
 
 - The model used is YOLOv8m from Ultralytics.
